@@ -10,10 +10,13 @@ package projetoaplicacao1;
  */
 public class ProjetoAplicacao1 {
 
-    static String[][] clientes = new String[3][3]; // matriz de clientes linha e coluna
-    static String[] tipoObjeto = new String[3];
-    static String[][] objetos = new String[3][3];
-    static String[] manutencoes = new String[3];
+    // Isso é uma constante
+    static final int LINHAS = 5;
+
+    static String[][] clientes = new String[LINHAS][3]; // matriz de clientes linha e coluna
+    static String[] tipoObjeto = new String[LINHAS];
+    static String[][] objetos = new String[LINHAS][2];
+    static String[] manutencoes = new String[LINHAS];
 
     public static void main(String[] args) {
         inicializaVetores();
@@ -21,30 +24,29 @@ public class ProjetoAplicacao1 {
     }
 
     static void inicializaVetores() {
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                clientes[i][j] = "";
-            }
+        inicializarVetor(tipoObjeto);
+        inicializarVetor(manutencoes);
+        inicializarMatriz(clientes);
+        inicializarMatriz(objetos);
+    }
 
-            for (int i = 0; i < 3; i++) {
-                tipoObjeto[i] = "";
-            }
+    static void inicializarVetor(String vetor[]) {
+        for (int i = 0; i < vetor.length; i++) {
+            vetor[i] = "";
+        }
+    }
 
-            for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 3; j++) {
-                    objetos[i][j] = "";
-                }
-
-                for (int i = 0; i < 3; i++) {
-                    manutencoes[i] = "";
-                }
+    static void inicializarMatriz(String matriz[][]) {
+        for (int i = 0; i < matriz.length; i++) {
+            for (int j = 0; j < matriz[i].length; j++) {
+                matriz[i][j] = "";
             }
         }
     }
 
     static int verificaPosicaoLivreNoVetor(String vetor[]) {
         for (int i = 0; i < vetor.length; i++) {
-            if (vetor[i] == "") {
+            if (vetor[i].equals("")) {
                 return i;
             }
         }
@@ -54,7 +56,7 @@ public class ProjetoAplicacao1 {
 
     static int verificaPosicaoLivreNaMatriz(String matriz[][]) {
         for (int i = 0; i < matriz.length; i++) {
-            if (matriz[i][0] == "") {
+            if (matriz[i][0].equals("")) {
                 return i;
             }
         }
@@ -63,7 +65,7 @@ public class ProjetoAplicacao1 {
     }
 
     static void menu() {
-        int opcao = 0;
+        int opcao;
 
         do {
             opcao = receberOpcaoMenuPrincipal();
@@ -98,8 +100,8 @@ public class ProjetoAplicacao1 {
     }
 
     static int receberOpcaoMenuPrincipal() {
-        System.out.println("\n\n###-------SISTEMA DE EMPRÉSTIMOS DE OBJETOS------###");
-        System.out.println("\n                  ==========================================");
+        System.out.println("\n\n###-------SISTEMA DE EMPRÉSTIMOS DE OBJETOS------###\n");
+        System.out.println("                  ============================================");
         System.out.println("                  |     1 - Cadastro de Clientes             |");
         System.out.println("                  |     2 - Cadastro de Tipos de Objetos     |");
         System.out.println("                  |     3 - Cadastro de Objetos              |");
@@ -183,18 +185,7 @@ public class ProjetoAplicacao1 {
                     break;
 
                 case 2:
-                    System.out.println("Existem estes Objetos cadastrados:");
-                    System.out.println("Cad.   Objeto          ");
-
-                    for (int i = 0; i < objetos.length; i++) {
-                        System.out.print(i);
-
-                        for (int j = 0; j < objetos.length; j++) {
-                            System.out.print("       " + objetos[i][j]);
-                        }
-                        System.out.println("");
-                        break;
-                    }
+                    listarObjetos();
                     linha = Entrada.leiaInt("Informe o código para ser alterado -> ");
 
                     objetos[linha][0] = Entrada.leiaString("Informe o novo nome para " + objetos[linha][0] + ": ");
@@ -203,19 +194,7 @@ public class ProjetoAplicacao1 {
                     break;
 
                 case 3:
-                    System.out.println("Existem estes Objetos cadastrados:");
-                    System.out.println("Cód.   Objeto          ");
-
-                    for (int i = 0; i < objetos.length; i++) {
-                        System.out.print(i);
-
-                        for (int j = 0; j < objetos.length; j++) {
-                            System.out.print("       " + objetos[i][j]);
-                        }
-
-                        System.out.println("");
-                        break;
-                    }
+                    listarObjetos();
                     linha = Entrada.leiaInt("Informe o código para ser excluido -> ");
                     objetos[linha][0] = "";
                     objetos[linha][1] = "";
@@ -224,19 +203,29 @@ public class ProjetoAplicacao1 {
                     break;
 
                 case 4:
-                    for (int i = 0; i < objetos.length; i++) {
-                        System.out.print(i);
-
-                        for (int j = 0; j < objetos.length; j++) {
-                            System.out.print("       " + objetos[i][j]);
-                        }
-
-                        System.out.println("");
-                        break;
-                    }
+                    listarObjetos();
             }
         } while (opcaoSelecionada != 0);
 
+    }
+
+    static void listarObjetos() {
+        System.out.println("Existem estes Objetos cadastrados:");
+        System.out.println("Cod. - Objeto");
+
+        for (int i = 0; i < objetos.length; i++) {
+            if (objetos[i][1].equals("")) {
+                continue;
+            }
+
+            System.out.print(i);
+
+            for (String objeto : objetos[i]) {
+                System.out.print(" - " + objeto);
+            }
+
+            System.out.println("");
+        }
     }
 
     static void cadastroClientes() {
@@ -261,19 +250,7 @@ public class ProjetoAplicacao1 {
                     break;
 
                 case 2:
-                    System.out.println("Existem estes clientes cadastrados:");
-                    System.out.println("Cad.   Nome           Email          Cidade");
-
-                    for (int i = 0; i < clientes.length; i++) {
-                        System.out.print(i);
-
-                        for (int j = 0; j < clientes.length; j++) {
-                            System.out.print("       " + clientes[i][j]);
-                        }
-
-                        System.out.println("");
-                        break;
-                    }
+                    listarClientes();
                     linha = Entrada.leiaInt("Informe o código para ser alterado -> ");
 
                     clientes[linha][0] = Entrada.leiaString("Informe o novo nome para " + clientes[linha][0] + ": ");
@@ -283,18 +260,8 @@ public class ProjetoAplicacao1 {
                     break;
 
                 case 3:
-                    System.out.println("Existem estes clientes cadastrados:");
-                    System.out.println("Cód.   Nome           Email          Cidade");
+                    listarClientes();
 
-                    for (int i = 0; i < clientes.length; i++) {
-                        System.out.print(i);
-
-                        for (int j = 0; j < clientes.length; j++) {
-                            System.out.print("       " + clientes[i][j]);
-                        }
-                        System.out.println("");
-                        break;
-                    }
                     linha = Entrada.leiaInt("Informe o código para ser excluido -> ");
                     clientes[linha][0] = "";
                     clientes[linha][1] = "";
@@ -303,16 +270,28 @@ public class ProjetoAplicacao1 {
                     break;
 
                 case 4:
-                    for (int i = 0; i < clientes.length; i++) {
-                        System.out.print(i);
-                        for (int j = 0; j < clientes.length; j++) {
-                            System.out.print("       " + clientes[i][j]);
-                        }
-                        System.out.println("");
-                        break;
-                    }
+                    listarClientes();
             }
         } while (opcaoSelecionada != 0);
+    }
+
+    static void listarClientes() {
+        System.out.println("Existem estes clientes cadastrados:");
+        System.out.println("Cad. - Nome - Email - Cidade");
+
+        for (int i = 0; i < clientes.length; i++) {
+            if (clientes[i][1].equals("")) {
+                continue;
+            }
+
+            System.out.print(i);
+
+            for (String cliente : clientes[i]) {
+                System.out.print(" - " + cliente);
+            }
+
+            System.out.println("");
+        }
     }
 
     static void cadastroTipoObjeto() {
@@ -336,40 +315,37 @@ public class ProjetoAplicacao1 {
                     break;
 
                 case 2:
-                    System.out.println("Existem estes tipos de ferramentas cadastradas:");
-                    System.out.println("Cód.   Tipo");
-
-                    for (int i = 0; i < tipoObjeto.length; i++) {
-                        System.out.println(i + "   -    " + tipoObjeto[i]);
-                        break;
-                    }
-
+                    listarTipoObjeto();
                     pos = Entrada.leiaInt("Informe o código para ser alterado -> ");
                     tipoObjeto[pos] = Entrada.leiaString("Informe o novo nome para " + tipoObjeto[pos] + ": ");
                     System.out.println("=> Alteração efetuada com sucesso! <=");
                     break;
 
                 case 3:
-                    System.out.println("Existem estes tipos de Objetos cadastrados:");
-                    System.out.println("Cód.   Tipo");
-
-                    for (int i = 0; i < tipoObjeto.length; i++) {
-                        System.out.println(i + "   -    " + tipoObjeto[i]);
-                        break;
-                    }
-
+                    listarTipoObjeto();
                     pos = Entrada.leiaInt("Informe o código para ser excluido -> ");
                     tipoObjeto[pos] = "";
                     System.out.println("=> Exclusão efetuada com sucesso! <=");
                     break;
 
                 case 4:
-                    for (int i = 0; i < tipoObjeto.length; i++) {
-                        System.out.println(i + "   -    " + tipoObjeto[i]);
-                        break;
-                    }
+                    listarTipoObjeto();
+                    break;
             }
         } while (opcaoSelecionada != 0);
+    }
+
+    static void listarTipoObjeto() {
+        System.out.println("Existem estes tipos de ferramentas cadastradas:");
+        System.out.println("Cód. - Tipo");
+
+        for (int i = 0; i < tipoObjeto.length; i++) {
+            if (tipoObjeto[i].equals("")) {
+                continue;
+            }
+
+            System.out.println(i + " - " + tipoObjeto[i]);
+        }
     }
 
     static void cadastroManutencoes() {
@@ -393,40 +369,37 @@ public class ProjetoAplicacao1 {
                     break;
 
                 case 2:
-                    System.out.println("Existem estas Manutenções cadastradas:");
-                    System.out.println("Cód.   Tipo");
-
-                    for (int i = 0; i < manutencoes.length; i++) {
-                        System.out.println(i + "   -    " + manutencoes[i]);
-                        break;
-                    }
-
+                    listarManutencoes();
                     pos = Entrada.leiaInt("Informe o código para ser alterado -> ");
                     manutencoes[pos] = Entrada.leiaString("Informe a nova " + manutencoes[pos] + ": ");
                     System.out.println("=> Alteração efetuada com sucesso! <=");
                     break;
 
                 case 3:
-                    System.out.println("Existem estas Manutenções cadastradas:");
-                    System.out.println("Cód.   Manutenção");
-
-                    for (int i = 0; i < manutencoes.length; i++) {
-                        System.out.println(i + "   -    " + manutencoes[i]);
-                        break;
-                    }
-
+                    listarManutencoes();
                     pos = Entrada.leiaInt("Informe a Manutenção a ser excluida -> ");
                     manutencoes[pos] = "";
                     System.out.println("=> Exclusão efetuada com sucesso! <=");
                     break;
 
                 case 4:
-                    for (int i = 0; i < manutencoes.length; i++) {
-                        System.out.println(i + "   -    " + manutencoes[i]);
-                        break;
-                    }
+                    listarManutencoes();
+                    break;
             }
         } while (opcaoSelecionada != 0);
+    }
+
+    static void listarManutencoes() {
+        System.out.println("Existem estas Manutenções cadastradas:");
+        System.out.println("Cód. - Tipo");
+
+        for (int i = 0; i < manutencoes.length; i++) {
+            if (manutencoes[i].equals("")) {
+                continue;
+            }
+
+            System.out.println(i + "   -    " + manutencoes[i]);
+        }
     }
 
 }
